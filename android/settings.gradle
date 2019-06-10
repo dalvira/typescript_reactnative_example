@@ -1,0 +1,3 @@
+rootProject.name = 'typescript_rn_2'
+
+include ':app'
