@@ -1,73 +1,73 @@
 // components/Hello.tsx
 import React from 'react';
 import { Button, StyleSheet, Text, View } from 'react-native';
+import {
+  HelloActionTypes,
+  onPressAdd,
+  onPressSubtract
+} from '../actions/helloActions';
 
-export interface Props {
+interface HelloProps {
   name: string;
-  enthusiasmLevel?: number;
-}
-
-interface State {
   enthusiasmLevel: number;
+  onPressAdd: typeof onPressAdd;
+  onPressSubtract: typeof onPressSubtract;
 }
 
-class Hello extends React.Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
+const Hello: React.SFC<HelloProps> = ({
+  name,
+  enthusiasmLevel,
+  onPressAdd,
+  onPressSubtract
+}) => {
+  const { root, buttons, button, greeting } = styles;
 
-    if ((props.enthusiasmLevel || 0) <= 0) {
-      throw new Error('You could be a little more enthusiastic. :D');
-    }
+  const handleOnPressAdd = () => {
+    onPressAdd(enthusiasmLevel);
+  };
 
-    this.state = {
-      enthusiasmLevel: props.enthusiasmLevel || 1
-    };
-  }
+  const handleOnPressSubtract = () => {
+    onPressSubtract(enthusiasmLevel);
+  };
 
-  onIncrement = () =>
-    this.setState({ enthusiasmLevel: this.state.enthusiasmLevel + 1 });
-  onDecrement = () =>
-    this.setState({ enthusiasmLevel: this.state.enthusiasmLevel - 1 });
-  getExclamationMarks = (numChars: number) => Array(numChars + 1).join('!');
+  const getExclamationMarks = (numChars: number) => {
+    return Array(numChars + 1).join('!');
+  };
 
-  render() {
-    return (
-      <View style={styles.root}>
-        <Text style={styles.greeting}>
-          Hello{' '}
-          {this.props.name +
-            this.getExclamationMarks(this.state.enthusiasmLevel)}
-        </Text>
+  return (
+    <View style={root}>
+      <Text style={greeting}>
+        Hello {name + getExclamationMarks(enthusiasmLevel)}
+      </Text>
 
-        <View style={styles.buttons}>
-          <View style={styles.button}>
-            <Button
-              title="-"
-              onPress={this.onDecrement}
-              accessibilityLabel="decrement"
-              color="red"
-            />
-          </View>
+      <View style={buttons}>
+        <View style={button}>
+          <Button
+            title="-"
+            onPress={handleOnPressSubtract}
+            accessibilityLabel="decrement"
+            color="red"
+          />
+        </View>
 
-          <View style={styles.button}>
-            <Button
-              title="+"
-              onPress={this.onIncrement}
-              accessibilityLabel="increment"
-              color="blue"
-            />
-          </View>
+        <View style={button}>
+          <Button
+            title="+"
+            onPress={handleOnPressAdd}
+            accessibilityLabel="increment"
+            color="blue"
+          />
         </View>
       </View>
-    );
-  }
-}
+    </View>
+  );
+};
 
-// styles
 const styles = StyleSheet.create({
   root: {
+    flex: 1,
     alignItems: 'center',
-    alignSelf: 'center'
+    justifyContent: 'center'
   },
   buttons: {
     flexDirection: 'row',
